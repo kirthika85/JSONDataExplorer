@@ -28,10 +28,9 @@ if openai_api_key.startswith('sk-'):
            for i, item in enumerate(data):
                if isinstance(item, dict):
                    flattened_item = flatten_json(item, prefix + str(i) + '_')
-                   for key, value in flattened_item.items():
-                       flattened_data[prefix + key] = value
+                   flattened_data.append(flattened_item)
                else:
-                   flattened_data[prefix + str(i)] = item
+                   flattened_data.append({prefix + str(i): item})
            return flattened_data
        else:
            return {prefix[:-1]: data}
@@ -40,18 +39,16 @@ if openai_api_key.startswith('sk-'):
        if json_input:
           try:
              parsed_data = json.loads(json_input)
-             if isinstance(parsed_data, dict) or isinstance(parsed_data, list):
+             if isinstance(parsed_data, dict) :
                 flattened_data = flatten_json(parsed_data)
-                if isinstance(parsed_data, dict):
-                    df = pd.DataFrame([flattened_data])
-                elif isinstance(parsed_data, list):
-                    df = pd.DataFrame(flattened_data)
-                else:
-                    df = pd.DataFrame([flattened_data])
-                st.write("### Parsed JSON Data")
-                st.dataframe(df)
+                df = pd.DataFrame(flattened_data)
+             elif isinstance(parsed_data, list):
+                flattened_data = flatten_json(parsed_data)
+                df = pd.DataFrame([flattened_data])
              else:
                 st.error("Invalid JSON data. Please check your input.")
+             st.write("### Parsed JSON Data")
+             st.dataframe(df)
           except json.JSONDecodeError as e:
               st.error("Invalid JSON data. Please check your input.")
               st.error(str(e))
