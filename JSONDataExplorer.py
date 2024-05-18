@@ -41,11 +41,16 @@ if openai_api_key.startswith('sk-'):
                 flattened_data = flatten_json(parsed_data)
                 if isinstance(flattened_data, dict):
                    df = pd.DataFrame([flattened_data])
-                   st.write("### Parsed JSON Data")
-                   st.dataframe(df)
+                elif isinstance(parsed_data, dict):
+                    df = pd.DataFrame([flattened_data]
                 else:
                     st.error("Invalid JSON data. Please check your input.")
                     st.stop()
+                orders_df = pd.DataFrame(df['orders'].explode().tolist())
+                df = pd.concat([df.drop(columns=['orders']), orders_df], axis=1)
+
+                st.write("### Parsed JSON Data")
+                st.dataframe(df)
              else:
                 st.error("Invalid JSON data. Please check your input.")
           except json.JSONDecodeError:
