@@ -18,6 +18,8 @@ if openai_api_key.startswith('sk-'):
        if isinstance(data, dict):
            flattened_data = {}
            for key, value in data.items():
+               print("Key:", key)
+               print("Value:", value)
                if isinstance(value, (dict, list)):
                    flattened_data.update(flatten_json(value, prefix + key + '_'))
                else:
@@ -26,6 +28,7 @@ if openai_api_key.startswith('sk-'):
        elif isinstance(data, list):
            flattened_data = []
            for i, item in enumerate(data):
+               print("Item:", item)
                if isinstance(item, dict):
                    flattened_item = flatten_json(item, prefix + str(i) + '_')
                    flattened_data.append(flattened_item)
