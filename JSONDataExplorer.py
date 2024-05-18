@@ -28,7 +28,8 @@ if openai_api_key.startswith('sk-'):
            for i, item in enumerate(data):
                if isinstance(item, dict):
                    flattened_item = flatten_json(item, prefix + str(i) + '_')
-                   flattened_data.update(flattened_item)
+                   for key, value in flattened_item.items():
+                       flattened_data[prefix + key] = value
                else:
                    flattened_data[prefix + str(i)] = item
            return flattened_data
@@ -43,6 +44,8 @@ if openai_api_key.startswith('sk-'):
                 flattened_data = flatten_json(parsed_data)
                 if isinstance(parsed_data, dict):
                     df = pd.DataFrame([flattened_data])
+                elif isinstance(parsed_data, list):
+                    df = pd.DataFrame(flattened_data)
                 else:
                     df = pd.DataFrame([flattened_data])
                 st.write("### Parsed JSON Data")
