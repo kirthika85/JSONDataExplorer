@@ -15,7 +15,7 @@ if openai_api_key.startswith('sk-'):
    json_input = st.text_area("Enter JSON data:")
 
    def flatten_json(data, prefix=''):
-      if isinstance(data, dict):
+       if isinstance(data, dict):
            flattened_data = {}
            for key, value in data.items():
                if isinstance(value, (dict, list)):
@@ -23,28 +23,35 @@ if openai_api_key.startswith('sk-'):
                else:
                    flattened_data[prefix + key] = value
            return flattened_data
-      elif isinstance(data, list):
-           flattened_data = []
+       elif isinstance(data, list):
+           flattened_data = {}
            for i, item in enumerate(data):
-               flattened_data.append(flatten_json(item, prefix + str(i) + '_'))
+               if isinstance(item, dict):
+                   flattened_item = flatten_json(item, prefix + str(i) + '_')
+                   flattened_data.update(flattened_item)
+               else:
+                   flattened_data[prefix + str(i)] = item
            return flattened_data
-      else:
+       else:
            return {prefix[:-1]: data}
        
    if st.button("Parse JSON"):
        if json_input:
           try:
              parsed_data = json.loads(json_input)
-             flattened_data = flatten_json(parsed_data)
-             if isinstance(flattened_data, list):
-                 df = pd.DataFrame(flattened_data)
-             elif isinstance(parsed_data, dict):
-                 df = pd.DataFrame([flattened_data])
+             if isinstance(parsed_data, dict) or isinstance(parsed_data, list):
+                flattened_data = flatten_json(parsed_data)
+                if isinstance(flattened_data, list):
+                    df = pd.DataFrame(flattened_data)
+                elif isinstance(parsed_data, dict):
+                    df = pd.DataFrame([flattened_data])
+                else:
+                    st.error("Invalid JSON data. Please check your input.")
+                    st.stop()
+                st.write("### Parsed JSON Data")
+                st.dataframe(df)
              else:
-                 st.error("Invalid JSON data. Please check your input.")
-                 st.stop()
-             st.write("### Parsed JSON Data")
-             st.dataframe(df)
+                st.error("Invalid JSON data. Please check your input.")
           except json.JSONDecodeError:
               st.error("Invalid JSON data. Please check your input.")       
        else:
