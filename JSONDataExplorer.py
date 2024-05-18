@@ -12,7 +12,7 @@ openai_api_key = st.sidebar.text_input('OpenAI API Key', type='password')
 if not openai_api_key.startswith('sk-'):
    st.warning('Please enter your OpenAI API key!', icon='⚠')
 if openai_api_key.startswith('sk-'):
-   json_input = st.text_area("Enter JSON data", height=200)
+   json_input = st.text_area("Enter JSON data:")
    if st.button("Parse JSON"):
        if json_input:
           try:
