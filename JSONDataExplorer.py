@@ -28,8 +28,7 @@ if openai_api_key.startswith('sk-'):
            for i, item in enumerate(data):
                if isinstance(item, dict):
                    flattened_item = flatten_json(item, prefix + str(i) + '_')
-                   for key, value in flattened_item.items():
-                       flattened_data[prefix + key] = value
+                   flattened_data.update(flattened_item)
                else:
                    flattened_data[prefix + str(i)] = item
            return flattened_data
@@ -45,14 +44,14 @@ if openai_api_key.startswith('sk-'):
                 if isinstance(parsed_data, dict):
                     df = pd.DataFrame([flattened_data])
                 else:
-                    st.error("Invalid JSON data. Please check your input.")
-                    st.stop()
+                    df = pd.DataFrame([flattened_data])
                 st.write("### Parsed JSON Data")
                 st.dataframe(df)
              else:
                 st.error("Invalid JSON data. Please check your input.")
-          except json.JSONDecodeError:
-              st.error("Invalid JSON data. Please check your input.")       
+          except json.JSONDecodeError as e:
+              st.error("Invalid JSON data. Please check your input.")
+             st.error(str(e))
        else:
            st.error("Please enter JSON data.")
 
