@@ -13,22 +13,40 @@ if not openai_api_key.startswith('sk-'):
    st.warning('Please enter your OpenAI API key!', icon='⚠')
 if openai_api_key.startswith('sk-'):
    json_input = st.text_area("Enter JSON data:")
+
+   def flatten_json(data, prefix=''):
+      if isinstance(data, dict):
+           flattened_data = {}
+           for key, value in data.items():
+               if isinstance(value, (dict, list)):
+                   flattened_data.update(flatten_json(value, prefix + key + '_'))
+               else:
+                   flattened_data[prefix + key] = value
+           return flattened_data
+      elif isinstance(data, list):
+           flattened_data = []
+           for i, item in enumerate(data):
+               flattened_data.append(flatten_json(item, prefix + str(i) + '_'))
+           return flattened_data
+      else:
+           return {prefix[:-1]: data}
+       
    if st.button("Parse JSON"):
        if json_input:
           try:
              parsed_data = json.loads(json_input)
-             if isinstance(parsed_data, list):
-                 parsed_df=pd.json_normalize(parsed_data)
-                 st.write("### Parsed JSON Data")
-                 st.dataframe(parsed_df)
+             flattened_data = flatten_json(parsed_data)
+             if isinstance(flattened_data, list):
+                 df = pd.DataFrame(flattened_data)
              elif isinstance(parsed_data, dict):
-                 parsed_df=pd.json_normalize([parsed_data])
-                 st.write("### Parsed JSON Data")
-                 st.dataframe(parsed_df)
+                 df = pd.DataFrame([flattened_data])
              else:
                  st.error("Invalid JSON data. Please check your input.")
+                 st.stop()
+             st.write("### Parsed JSON Data")
+             st.dataframe(df)
           except json.JSONDecodeError:
-                  st.error("Invalid JSON data. Please check your input.")       
+              st.error("Invalid JSON data. Please check your input.")       
        else:
            st.error("Please enter JSON data.")
 
