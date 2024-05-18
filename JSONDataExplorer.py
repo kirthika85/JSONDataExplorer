@@ -51,7 +51,7 @@ if openai_api_key.startswith('sk-'):
                 st.error("Invalid JSON data. Please check your input.")
           except json.JSONDecodeError as e:
               st.error("Invalid JSON data. Please check your input.")
-             st.error(str(e))
+              st.error(str(e))
        else:
            st.error("Please enter JSON data.")
 
