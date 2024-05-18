@@ -42,7 +42,7 @@ if openai_api_key.startswith('sk-'):
                 if isinstance(flattened_data, dict):
                    df = pd.DataFrame([flattened_data])
                 elif isinstance(parsed_data, dict):
-                    df = pd.DataFrame([flattened_data]
+                    df = pd.DataFrame([flattened_data])
                 else:
                     st.error("Invalid JSON data. Please check your input.")
                     st.stop()
