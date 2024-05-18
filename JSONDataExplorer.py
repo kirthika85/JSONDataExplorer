@@ -27,10 +27,8 @@ if openai_api_key.startswith('sk-'):
            flattened_data = {}
            for i, item in enumerate(data):
                if isinstance(item, dict):
-                   flattened_item = flatten_json(item, prefix + str(i) + '_')
-                   flattened_data.update(flattened_item)
-               else:
-                   flattened_data[prefix + str(i)] = item
+                   flattened_item = flatten_json(item, prefix)
+                   flattened_data.append(flattened_item)
            return flattened_data
        else:
            return {prefix[:-1]: data}
