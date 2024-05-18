@@ -18,11 +18,11 @@ if openai_api_key.startswith('sk-'):
           try:
              parsed_data = json.loads(json_input)
              if isinstance(parsed_data, list):
-                 parsed_df=pd.DataFrame(parsed_data)
+                 parsed_df=pd.json_normalize(parsed_data)
                  st.write("### Parsed JSON Data")
                  st.dataframe(parsed_df)
              elif isinstance(parsed_data, dict):
-                 parsed_df=pd.DataFrame([parsed_data])
+                 parsed_df=pd.json_normalize([parsed_data])
                  st.write("### Parsed JSON Data")
                  st.dataframe(parsed_df)
              else:
