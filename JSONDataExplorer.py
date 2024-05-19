@@ -83,9 +83,9 @@ if openai_api_key.startswith('sk-'):
       query_input = st.text_input("Enter your query about the JSON data")
       if json_input and query_input:
            llm=ChatOpenAI(api_key=openai_api_key,temperature=0.1,model_name="gpt-3.5-turbo")
-           prompt=ChatPromptTemplate.from_template(f"Query the following JSON data with: '{query_input}'\n\n{json_input}")
+           prompt=ChatPromptTemplate.from_template("Query the following JSON data with: '{query_input}'")
            chain=prompt|llm
-           response =response=chain.invoke()
+           response =response=chain.invoke({"input":{json_input}})
            st.write("### Query Result")
            st.write(response.content)
       else:
