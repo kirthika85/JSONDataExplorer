@@ -71,9 +71,9 @@ if openai_api_key.startswith('sk-'):
    if st.button("Summarize JSON"):
        if json_input:
           llm=ChatOpenAI(api_key=openai_api_key,temperature=0.1,model_name="gpt-3.5-turbo")
-          prompt=ChatPromptTemplate.from_template(f"Summarize the following JSON data:\n\n{json_input}")
+          prompt=ChatPromptTemplate.from_template("Summarize the following JSON data:\n\n{input}")
           chain=prompt|llm
-          response =response=chain.invoke()
+          response=response=chain.invoke({"input":{json_input}})
           st.write("### JSON Summary")
           st.write(response.content)   
        else:
