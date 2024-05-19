@@ -86,6 +86,7 @@ if openai_api_key.startswith('sk-'):
            llm=ChatOpenAI(api_key=openai_api_key,temperature=0.1,model_name="gpt-3.5-turbo")
            prompt=ChatPromptTemplate.from_template(query_input)
            chain=prompt|llm
+           st.write(json_input)
            response =response=chain.invoke({"input":{json_input}})
            st.write("### Query Result")
            st.write(response.content)
