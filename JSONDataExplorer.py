@@ -87,7 +87,7 @@ if openai_api_key.startswith('sk-'):
            prompt=ChatPromptTemplate.from_template(f"'{query_input}'\n\n{json_input}")
            chain=prompt|llm
            st.write(json_input)
-           response =response=chain.invoke(prompt)
+           response =response=chain.invoke()
            st.write("### Query Result")
            st.write(response.content)
       else:
