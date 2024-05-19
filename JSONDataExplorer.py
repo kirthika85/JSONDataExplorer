@@ -90,6 +90,7 @@ if openai_api_key.startswith('sk-'):
            st.write(query_input)
            st.write(prompt)
            response=chain.invoke({"json_data": json_input})
+           st.write(prompt)
            st.write("### Query Result")
            st.write(response.content)
       else:
