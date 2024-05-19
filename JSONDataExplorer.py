@@ -30,10 +30,14 @@ if openai_api_key.startswith('sk-'):
            for i, item in enumerate(data):
                print("Item:", item)
                if isinstance(item, dict):
-                   for inner_key, inner_value in item.items():
-                       flattened_data[prefix + str(i) + '_' + inner_key] = inner_value
+                   inner_flattened_data = flatten_json(item, prefix + str(i) + '_')
+                   flattened_data.update(inner_flattened_data)
+               elif isinstance(item, list):
+                   inner_flattened_data = flatten_json(item, prefix + str(i) + '_')
+                   for key, value in inner_flattened_data.items():
+                       flattened_data[prefix + key] = value
                else:
-                   flattened_data.append({prefix + str(i): item})
+                   flattened_data[prefix + str(i)] = item
            return flattened_data
        else:
            return {prefix[:-1]: data}
