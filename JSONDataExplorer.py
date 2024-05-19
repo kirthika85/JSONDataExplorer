@@ -52,9 +52,9 @@ if openai_api_key.startswith('sk-'):
                    flattened_data = flatten_json(item)
                    df = pd.DataFrame([flattened_data])
                    dfs.append(df)
-                 concatenated_df = pd.concat(dfs, ignore_index=True)
-                 st.write("### Parsed JSON Data")
-                 st.dataframe(concatenated_df)
+                concatenated_df = pd.concat(dfs, ignore_index=True)
+                st.write("### Parsed JSON Data")
+                st.dataframe(concatenated_df)
              elif isinstance(parsed_data, dict):
                  flattened_data = flatten_json(parsed_data)
                  df = pd.DataFrame([flattened_data])
